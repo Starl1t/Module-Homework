@@ -1,130 +1,153 @@
-#include <stdio.h>
-#include <math.h>
-#include <stdlib.h>
-#include <time.h>
 #include "functions.h"
+#include <stdio.h>
+#include <malloc.h>
+#include <stdlib.h>
+#include <string.h>
 
-void num1(double x_, double a_, double c_)
+int num1(char* str_)
 {
-   double L = (sqrt(exp(x_) - pow(cos(pow(x_, 2) * pow(a_, 5)), 4)) + pow(atan(a_ - pow(x_, 5)), 4)) / (exp(1) * sqrt(fabs(a_ + x_ * pow(c_, 4))));
-
-   printf("%flg", L);
-}
-
-void num2(double t_)
-{
-  double V = 3 * pow(t_, 2) - 6 * t_;
-
-  printf("%lg", V);
-}
-
-void num3(double a_, double b_, double c_)
-{
-   if (a_ == 0)
-   {
-      printf("a = 0");
-      exit(EXIT_FAILURE);
-   }
-   double D = (b_ * b_) - (4 * a_ * c_);
-
-   if (D < 0)
-   {
-      printf("Roots doesn't exist");
-   }
-   else if (D > 0)
-   {
-      double x1 = (-b_ + sqrt(D)) / (2 * a_);
-      double x2 = (-b_ - sqrt(D)) / (2 * a_);
-
-      printf("x1 = %lg; x2 = %lg", x1, x2);
-   }
-   else
-   {
-      double x = -b_ / (2 * a_);
-
-      printf("x = %lg", x);
-   }
-}
-
-void num4(float time_, int code_)
-{
-   int cost = 0;
-   switch (code_)
-   {
-   case 48:
-      cost = 15;
-      break;
-   case 44:
-      cost = 18;
-      break;
-   case 46:
-      cost = 11;
-      break;
-   }
-   float fullcost = cost * time_ / 60;
-
-   printf("Full cost is %f", fullcost);
-}
-
-void num5()
-{
-   for (int i = 1000; i < 10000; ++i)
-   {
-      int sum = 0;
-      int x = i;
-      while (x != 0)
-      {
-         int p = pow(x % 10, 4);
-         sum = sum + p;
-         x = x / 10;
-      }
-      if (i == sum)
-      {
-         printf("%d\n", i);
-      }
-   }
-}
-
-void num6(int* bin, int N_)
-{
+   int len = strlen(str_);
+   int fwLenght = 0;  // first word lenght
+   int lwLenght = 0;  // last word lenght
+   int lwIndex = 0;   // index of last word first letter
+   char fw[100];      // first word
+   char lw[100];      // last word
    int i = 0;
-   int dec = 0;
-   int n = N_ - 1;
-   while (i < N_)
+   int j = 0;
+
+   // fw lenght //
+  while (str_[i] != ' ') 
    {
-      dec = dec + bin[i] * pow(2, n);
+      fwLenght++;
       i++;
-      n--;
    }
-   printf("Dec num is %d", dec);
-}
 
-int num7(I_, J_)
-{
-   if (J_ == 0 || I_ == 0)
+   
+   // str with only first word //
+   for (i = 0; i < fwLenght; i++) 
    {
-      printf("I or J = 0");
-      exit(EXIT_FAILURE);
+      fw[i] = str_[i];
+      fw[i + 1] = '\0';
    }
-   srand(time(NULL));
-   int* arr;
-   arr = malloc(I_ * J_ * sizeof(int));
 
-   for (int i = 0; i < I_ * J_; i++)
+   
+   // lw lenght //
+   i = len - 1;
+   
+   while (str_[i] != ' ') 
    {
-      arr[i] = rand() % 21 - 10;
-      arr[i] = arr[i] * -3;
+      lwLenght++;
+      i--;
    }
+  
+   
+   // lw index //
+   lwIndex = len - lwLenght;
 
-   printf("\n");
-
-   for (int i = 0; i < I_; i++)
+   
+   // str with only last word //
+   for (i = lwIndex; str_[i] != '\0'; i++)
    {
-      for (int j = 0; j < J_; j++)
-      {
-         printf("%3d ", arr[i * J_ + j]);
-      }
-      printf("\n");
+      lw[j] = str_[i];
+      lw[j + 1] = '\0';
+      j++;
    }
+
+   
+   // array with all other words //
+   char* otherWords = (char*)malloc(len * sizeof(char));
+   j = 0;
+   for (i = fwLenght; i < lwIndex; i++)
+   {
+      otherWords[j] = str_[i];
+      otherWords[j + 1] = '\0';
+      j++;
+   }
+
+   
+   // array lenght //
+   int wordsLen = len - fwLenght - lwLenght;
+
+   
+   // array with swapped words //
+   char* reverse = (char*)malloc(len * sizeof(char));
+
+   for (i = 0; i < lwLenght; i++)
+   {
+      reverse[i] = lw[i];
+      reverse[i + 1] = '\0';
+   }
+
+   for (j = 0; j < wordsLen; j++)
+   {
+      reverse[i] = otherWords[j];
+      reverse[i + 1] = '\0';
+      i++;
+   }
+
+   for (j = 0; j < fwLenght; j++)
+   {
+      reverse[i] = fw[j];
+      reverse[i + 1] = '\0';
+      i++;
+   }
+
+   printf("%s", reverse);
+   
    return 0;
 }
+
+void num2() //ne uspel
+{
+}
+
+
+
+
+
+
+void num3()
+{
+   FILE* f = NULL;
+   FILE* g = NULL;
+
+   
+   errno_t err1 = fopen_s(&f, "f.txt", "r");
+   
+   if (err1)
+   {
+      printf("error");
+      return 1;
+   }
+
+   errno_t err2 = fopen_s(&g, "g.txt", "w");
+   
+   if (err2)
+   {
+      printf("error");
+      return 1;
+   }
+  
+   int count = 1;
+   
+   for (char tmp; fscanf_s(f, "%c", &tmp) != EOF;)
+   {
+      if (tmp == 'Ï' || tmp == 'ï' || count % 4 == 0)
+      {
+         count++;
+         
+         while (tmp != ' ')
+         {
+            fscanf_s(f, "%c", &tmp);
+         }
+      }
+      else
+      {
+         fprintf_s(g, "%c", tmp);
+      }
+   }
+   
+   fclose(f);
+   fclose(g);
+}
+
